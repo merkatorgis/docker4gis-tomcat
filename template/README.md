@@ -1,5 +1,8 @@
 # Project Setup
 
+Create a new folder here in the root of this repo, containing a Maven project
+with a `pom.xml` that builds a `.war` file.
+
 ## Netbeans
 
 ### Prerequisites
@@ -18,7 +21,7 @@
 
 Note that Netbeans can't deal with sources in WSL (not on a UNC path, and also
 not on a mapped drive, although at first it seems to work, you will get in
-trouble).
+trouble when Maven starts assembling the `.war` file).
 
 So what you can do is to clone the repo of your Java component not
 only in WSL, but on a local disk in Windows as well. Then from Netbeans, you
@@ -77,7 +80,8 @@ find your Windows folder.
       1. Change method `getXml()` in `GenericResource.java` to: `return "<hello>world</hello>";`
       1. Ctrl-S to save the file
       1. Refresh the browser window, should get the xml text now
-1. File `ApplicationConfig.java`: Change `@javax.ws.rs.ApplicationPath` to `"rest"`
+1. File `ApplicationConfig.java`: Change `@javax.ws.rs.ApplicationPath` from
+   `"webresources"`to `"rest"`
    1. Ctrl-S to save the file
    1. Change browser url to `localhost:8080/rest/generic`
 
