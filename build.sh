@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAVEN_TAG=229
+MAVEN_TAG=latest
 
 build() {
 	docker image build \
@@ -8,25 +8,25 @@ build() {
 		-t "$IMAGE" .
 }
 
-if [ "$DOCKER_USER" = docker4gis ]; then
-	# Building the base image.
-	build
-else
-	# Building an extension image (using the docker4gis/maven image).
-	pom=$(find . -maxdepth 2 -name pom.xml | head -n 1)
+pom=$(find . -maxdepth 2 -name pom.xml | head -n 1)
+if [ "$pom" ]; then
+	# Building an extension image from Java sources; using docker4gis/maven to
+	# compile them to a .war file, then deploy the .war file.
 	src_dir=$(dirname "$pom")
 	src_dir=$(realpath "$src_dir")
+	project_name=$(basename "$src_dir")
 	# The values of the env vars on the line below only prevail for the maven
-	# run; afterwards, they still have the value they have now.
+	# run; onwards, they still have the value they have now.
 	DOCKER_REGISTRY='docker.io' DOCKER_USER=docker4gis \
-		"$BASE"/docker4gis/run.sh maven "$MAVEN_TAG" "$src_dir" &&
-		{
-			webapps_dir=conf/webapps
-			mkdir -p "$webapps_dir"
-			war_file=$webapps_dir/$(basename "$src_dir").war
-			cp "$src_dir"/target/*.war "$war_file"
-			build
-			rm -f "$war_file"
-			rm -rf "$webapps_dir"
-		}
+		"$BASE"/docker4gis/run.sh maven "$MAVEN_TAG" "$src_dir" || exit 1
+	# This is the location where `/entrypoint` will find it.
+	webapps_dir=conf/webapps
+	mkdir -p "$webapps_dir"
+	cp "$src_dir"/target/*.war "$webapps_dir/$project_name.war"
+	build
+	rm -rf "$webapps_dir"
+else
+	# Either building the base image, or an extension image with (a) precompiled
+	# webapp(s).
+	build
 fi
