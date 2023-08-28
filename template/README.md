@@ -41,7 +41,7 @@ find your Windows folder.
    1. Project Name: why not this project's DOCKER_USER?
    1. Project Location: the root of the Windows clone of your Java component's
       repo - a new folder will be created there, named as the Project Name
-   1. Group Id: com.merkator
+   1. Group Id: e.g. com.merkator
    1. Next
    1. Server: Add... Apache Tomcat or TomEE
       1. Server Location: where you unzipped Tomcat
