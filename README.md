@@ -1,4 +1,6 @@
 # docker4gis-tomcat
 
-For instructions on how to get your Java Web Application sources compiled and
-deployed, see [template/README.md](template/README.md).
+This is a base component for `docker4gis`; see
+https://github.com/merkatorgis/docker4gis/tree/npm-package/docs.
+
+See [template/README.md](template/README.md) for instructions specific for this component.
