@@ -1,12 +1,7 @@
-FROM tomcat:9.0.2-alpine
-
-RUN apk update; apk add --no-cache \
-    curl wget unzip grep sed \
-    postgresql-client \
-    ttf-freefont
+FROM tomcat:9.0.86-jre17-temurin-jammy
 
 ENV PATH=/util:$PATH \
-    JAVA_OPTS='-XX:SoftRefLRUPolicyMSPerMB=36000 -XX:+UseParNewGC -XX:NewRatio=2 -XX:+AggressiveOpts'
+    JAVA_OPTS='-XX:SoftRefLRUPolicyMSPerMB=36000 -XX:NewRatio=2'
 
 # Allow configuration before things start up.
 COPY conf/entrypoint /

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAVEN_TAG=v0.0.2
+MAVEN_TAG=latest
 
 build() {
 	docker image build \
@@ -15,10 +15,21 @@ if [ "$pom" ]; then
 	src_dir=$(dirname "$pom")
 	src_dir=$(realpath "$src_dir")
 	project_name=$(basename "$src_dir")
-	# The values of the env vars on the line below only prevail for the maven
-	# run; onwards, they still have the value they have now.
-	DOCKER_REGISTRY='docker.io' DOCKER_USER=docker4gis \
-		"$BASE"/docker4gis/run.sh maven "$MAVEN_TAG" "$src_dir" || exit 1
+	# Use .docker4gis.sh to copy the image's own version of docker4gis out
+	# of the image.
+	temp=$(mktemp -d)
+	dotdocker4gis=$BASE
+	dotdocker4gis=${dotdocker4gis:-$(dirname "$0")}
+	dotdocker4gis=$("$dotdocker4gis"/docker4gis/.docker4gis.sh "$temp" docker4gis/maven:"$MAVEN_TAG")
+	(
+		cd "$dotdocker4gis" || exit
+		# The values of the env vars on the line below only prevail for the maven
+		# run; onwards, they still have the value they have now.
+		DOCKER_REGISTRY='docker.io' DOCKER_USER=docker4gis \
+			docker4gis/run.sh maven "$MAVEN_TAG" "$src_dir" || exit 1
+	)
+	rm -rf "$temp"
+	echo
 	# This is the location where `/entrypoint` will find it.
 	webapps_dir=conf/webapps
 	mkdir -p "$webapps_dir"

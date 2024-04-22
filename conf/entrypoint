@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 if [ "$1" = 'tomcat' ]; then
 	shift 1
@@ -15,10 +16,6 @@ if [ "$1" = 'tomcat' ]; then
 
 		cp -r /tmp/conf/CATALINA_HOME/* \
 			"${CATALINA_HOME}"
-
-		host_ip=$(ip route show default | awk '/default/ {print $3}')
-		echo "host.ip=${host_ip//\./\\\.}" >> \
-			"${CATALINA_HOME}/conf/catalina.properties"
 
 		find /tmp/conf -name "conf.sh" -exec /tmp/conf/subconf.sh {} \;
 
