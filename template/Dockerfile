@@ -1,1 +1,1 @@
-FROM docker4gis/tomcat:v0.0.5
+FROM docker4gis/tomcat:v0.0.6
