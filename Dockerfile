@@ -8,9 +8,11 @@ COPY conf/entrypoint /
 ENTRYPOINT ["/entrypoint"]
 CMD ["tomcat"]
 
+# Install the bats plugin.
 COPY conf/.plugins/bats /tmp/bats
 RUN /tmp/bats/install.sh
 
+# Install the runner plugin.
 COPY conf/.plugins/runner /tmp/runner
 RUN /tmp/runner/install.sh
 
