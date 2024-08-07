@@ -14,6 +14,11 @@ RUN /tmp/bats/install.sh
 COPY conf/.plugins/runner /tmp/runner
 RUN /tmp/runner/install.sh
 
+# Install the pg plugin for the generic PostgreSQL client libraries, as used by
+# the JDBC driver.
+COPY conf/.plugins/pg /tmp/pg
+RUN /tmp/pg/install.sh
+
 COPY conf/CATALINA_HOME /tmp/conf/CATALINA_HOME
 COPY conf/webapps /tmp/conf/webapps
 COPY conf/subconf.sh /tmp/conf/subconf.sh
