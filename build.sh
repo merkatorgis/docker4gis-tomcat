@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAVEN_TAG=v0.0.7
+MAVEN_TAG=v0.0.8
 
 build() {
 	docker image build \
