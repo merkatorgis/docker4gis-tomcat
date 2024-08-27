@@ -1,4 +1,7 @@
-FROM a_generc_image:a-specific-tag
+FROM tomcat:9.0.86-jre17-temurin-jammy
+
+ENV PATH=/util:$PATH \
+    JAVA_OPTS='-XX:SoftRefLRUPolicyMSPerMB=36000 -XX:NewRatio=2'
 
 # Allow configuration before things start up.
 COPY conf/entrypoint /
@@ -12,6 +15,15 @@ RUN /tmp/bats/install.sh
 # Install the runner plugin.
 COPY conf/.plugins/runner /tmp/runner
 RUN /tmp/runner/install.sh
+
+# Install the pg plugin for the generic PostgreSQL client libraries, as used by
+# the JDBC driver.
+COPY conf/.plugins/pg /tmp/pg
+RUN /tmp/pg/install.sh
+
+COPY conf/CATALINA_HOME /tmp/conf/CATALINA_HOME
+COPY conf/webapps /tmp/conf/webapps
+COPY conf/subconf.sh /tmp/conf/subconf.sh
 
 # This may come in handy.
 ONBUILD ARG DOCKER_USER
